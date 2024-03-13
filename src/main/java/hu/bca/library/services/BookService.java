@@ -13,11 +13,7 @@ public interface BookService {
      * @return the number of the updated book
      *
      */
-    /*
-        Az itt hagyott "import java.util.List;" arra utal, hogy valaki a konyvek
-        listajaval tert vissza (vagy csak az id-kkal), de az tobb ezer konyv 
-        eseton (feltehetoleg) folosleges lenne. Mindenesetre a specifikaciobol 
-        nem tuik ki.
-     */
     int updateAllWithYear();
+    
+    List<Book> queryByAutorsCountryAndYear(String country, Integer from);
 }

@@ -57,4 +57,14 @@ public class BookServiceImpl implements BookService {
         }
         return count;
     }
+
+    @Override
+    public List<Book> queryByAutorsCountryAndYear(String country, Integer from) {
+        if (from == null) {
+            return bookRepository.findByAuthorsCountryOrderByYearAsc(country);
+        } else {
+            return bookRepository.findByAuthorsCountryAndYearGreaterThanOrderByYearAsc(country, from);
+        }
+    }
+
 }
