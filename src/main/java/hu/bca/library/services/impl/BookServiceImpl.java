@@ -5,22 +5,25 @@ import hu.bca.library.models.Book;
 import hu.bca.library.repositories.AuthorRepository;
 import hu.bca.library.repositories.BookRepository;
 import hu.bca.library.services.BookService;
+import hu.bca.library.services.OpenLibraryService;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
+import org.springframework.beans.factory.annotation.Autowired;
 
 @Service
 public class BookServiceImpl implements BookService {
-    private final BookRepository bookRepository;
-    private final AuthorRepository authorRepository;
 
-    public BookServiceImpl(BookRepository bookRepository, AuthorRepository authorRepository) {
-        this.bookRepository = bookRepository;
-        this.authorRepository = authorRepository;
-    }
+    @Autowired
+    protected BookRepository bookRepository;
+    @Autowired
+    protected AuthorRepository authorRepository;
+    @Autowired
+    protected OpenLibraryService openLibraryService;
 
     @Override
     public Book addAuthor(Long bookId, Long authorId) {
@@ -38,5 +41,20 @@ public class BookServiceImpl implements BookService {
 
         book.get().setAuthors(authors);
         return this.bookRepository.save(book.get());
+    }
+
+    @Override
+    public int updateAllWithYear() {
+        final Iterable<Book> books = bookRepository.findAll();
+        int count = 0;
+        for (Book book : books) {
+            final Integer bookPublisYear = openLibraryService.getBookPublisYear(book.getWorkId());
+            if (!Objects.equals(bookPublisYear, book.getYear())) {
+                book.setYear(bookPublisYear);
+                bookRepository.save(book);
+                count++;
+            }
+        }
+        return count;
     }
 }

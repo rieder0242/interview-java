@@ -6,8 +6,6 @@ import org.springframework.data.rest.webmvc.RepositoryRestController;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-
 @RepositoryRestController("books")
 public class BookController {
 
@@ -22,5 +20,10 @@ public class BookController {
     @RequestMapping("/{bookId}/add_author/{authorId}")
     @ResponseBody Book addAuthor(@PathVariable Long bookId, @PathVariable Long authorId) {
         return this.bookService.addAuthor(bookId, authorId);
+    }
+
+    @RequestMapping("/update-all-with-year")
+    @ResponseBody int updateAllWithYear() {
+        return this.bookService.updateAllWithYear();
     }
 }

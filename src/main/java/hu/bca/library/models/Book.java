@@ -34,6 +34,6 @@ public class Book {
     private List<Rental> rentals;
     
     @Column(nullable = true)
-    private int year;
+    private Integer year;
 
 }
